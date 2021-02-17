@@ -1,12 +1,13 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { router } from './routes/loginRoutes';
 
 const app = express();
 
-app.get('/', (req: Request, res: Response) => {
-  res.send(`
-    <div>Hello there</div>
-  `);
-});
+// #note syntax
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(router);
 
 const PORT = 3000;
 
