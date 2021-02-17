@@ -7,13 +7,28 @@ interface RequestWithBody extends Request {
 const router = Router();
 
 router.get('/', (req: Request, res: Response) => {
-  res.send(`
-    <div>Entry</div>
-  `);
+  if (req.session && req.session.isLoggedIn) {
+    res.send(`
+      <div>
+        <h1>You're logged in.</h1>
+        <a href="/logout">Logout</a>
+      </div>
+    `);
+  } else {
+    res.send(`
+      <div>
+        <h1>You're logged out.</h1>
+        <a href="/login">Login</a>
+      </div>
+    `);
+  }
 });
 
 router.get('/login', (req: Request, res: Response) => {
-  res.send(`
+  if (req.session && req.session.isLoggedIn) {
+    res.redirect('/');
+  } else {
+    res.send(`
     <div>
       <form method="POST">
         <label>Email</label>
@@ -22,8 +37,10 @@ router.get('/login', (req: Request, res: Response) => {
         <input name="password" type="password" />
         <button>Submit</button>
       </form>
+      <a href="/">Back to Home</a>
     </div>
   `);
+  }
 });
 
 router.post('/login', (req: RequestWithBody, res: Response) => {
@@ -35,13 +52,32 @@ router.post('/login', (req: RequestWithBody, res: Response) => {
       req.session = { isLoggedIn: true };
       res.redirect('/');
     } else {
-      res.send('invalid email or password');
+      res.send(`
+        <div>
+          <h2>Invalid email or password</h2>
+          <a href="/login">Login</a>
+        </div>
+      `);
     }
   } else {
-    res.send('email and password are required');
+    res.send(`
+        <div>
+          <h2>Email and password are required</h2>
+          <a href="/login">Login</a>
+        </div>
+      `);
   }
 
   res.send('test');
+});
+
+router.get('/logout', (req: Request, res: Response) => {
+  if (req.session && req.session.isLoggedIn) {
+    req.session = null;
+    res.redirect('/');
+  } else {
+    res.redirect('/');
+  }
 });
 
 export { router };
