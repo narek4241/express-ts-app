@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieSession from 'cookie-session';
-import { router } from './routes/loginRoutes';
+import { router } from './routes';
 
 const app = express();
 

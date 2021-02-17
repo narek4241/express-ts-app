@@ -6,7 +6,7 @@ interface RequestWithBody extends Request {
 
 const router = Router();
 
-function requireAuth(req: Request, res: Response, next: NextFunction) {
+function requireAuth(req: Request, res: Response, next: NextFunction): void {
   if (req.session && req.session.isLoggedIn) {
     next();
     return;
